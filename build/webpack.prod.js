@@ -1,0 +1,187 @@
+const path = require('path');
+const glob = require("glob");
+const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HappyPack = require('happypack');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const PurifyCSSPlugin = require('purifycss-webpack');
+const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+
+const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
+// TODO: css 关键路径渲染 https://github.com/addyosmani/critical-path-css-tools
+// TODO: srcset 控制浏览器加载图片类型 resize-image-loader responsive-loader
+const config = {
+    mode: 'production',
+    entry: {
+        main: './src/main.js',
+    },
+    output: {
+        // to fix: 生产环境下所有的 name 都会使用 chunkFilename 生成
+        filename: 'js/[name].[contenthash:8].js',
+        path: path.resolve(__dirname, '../dist'),
+        chunkFilename: 'js/[name].[contenthash:8].js',
+        publicPath: '/',
+    },
+    resolve: {
+        alias: {
+            react: path.resolve(__dirname, '../node_modules/react/index.js'),
+        },
+        mainFields: ['module', 'main'],
+        extensions: ['.js', '.json'],
+        modules: [path.resolve(__dirname, '../node_modules')]
+    },
+    module: {
+        rules: [
+            {
+                parser: {
+                    requireEnsure: false,
+                }
+            },
+            {
+                test: /\.m?js$/,
+                include: path.resolve(__dirname, '../src'),
+                use: {
+                    loader: 'happypack/loader?id=babel',
+                },
+            },
+            {
+                test:  /\.(sa|sc|c)ss$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: 'happypack/loader?id=styles',
+                    },
+                ],
+            },
+            {
+                test: /\.(gif|png|jpe?g|webp|svg)$/i,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 1024 * 10,
+                            name: 'image/[name].[hash:8].[ext]',
+                            fallback: 'file-loader',
+                        },
+                    },
+                    {
+                        loader: 'image-webpack-loader',
+                        options: {
+                            mozjpeg: {
+                              progressive: true,
+                              quality: 65
+                            },
+                            optipng: {
+                              enabled: false,
+                            },
+                            pngquant: {
+                              quality: '65-90',
+                              speed: 4
+                            },
+                            gifsicle: {
+                              interlaced: false,
+                            },
+                            webp: {
+                              quality: 75
+                            }
+                          },
+                    },
+                ],
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'font/[name].[hash:8].[ext]',
+                    },
+                },
+            },
+        ],
+    },
+    plugins: [
+        new CleanWebpackPlugin(),
+        new webpack.NamedChunksPlugin(
+            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+        ),
+        new LodashModuleReplacementPlugin(),
+        new HtmlWebpackPlugin({
+            title: "react 模版",
+            template: path.resolve(__dirname, '../public/index-prod.html'),
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            },
+        }),
+        new InlineManifestWebpackPlugin('manifest'),
+        new HappyPack({
+            id: 'styles',
+            threadPool: happyThreadPool,
+            loaders: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        importLoaders: 2,
+                    },
+                },
+                'postcss-loader',
+                'sass-loader',
+            ],
+        }),
+        new FixStyleOnlyEntriesPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'style/[name].[contenthash:8].css',
+            chunkFileName: 'style/[name].[contenthash:8].chunk.css',
+        }),
+        new PurifyCSSPlugin({
+            paths: glob.sync(`${path.join(__dirname, "../src")}/**/*.js`, { nodir: true }),
+        }),
+        new HappyPack({
+            id: 'babel',
+            threadPool: happyThreadPool,
+            loaders: ['babel-loader?cacheDirectory'],
+        }),
+    ],
+    optimization: {
+        moduleIds: 'hashed',
+        minimizer: [new ParallelUglifyPlugin({uglifyJS: {}}), new OptimizeCssAssetsWebpackPlugin()],
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    chunks: 'initial',
+                },
+                styles: {
+                    name: 'styles',
+                    test: /\.css$/,
+                    chunks: 'all',
+                    enforce: true,
+                },
+            },
+        },
+        runtimeChunk: {
+            name: "manifest",
+        },
+    },
+}
+
+// analysis bundle
+if (process.env.SHOW_REPORT == 1) {
+    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+    config.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = config;
