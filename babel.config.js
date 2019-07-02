@@ -7,15 +7,16 @@ const presets = [
         corejs: '3.0.0',
       },
     ],
-    '@babel/react'
+    '@babel/react',
 ];
 
 const plugins = [
+    // split lodash
     'lodash',
     '@babel/syntax-dynamic-import',
     '@babel/proposal-class-properties',
     [
-      // 生产环境打包移除 propTypes
+      // remove react propTypes in production mode
       'transform-react-remove-prop-types',
         {
           'mode': 'wrap',
@@ -24,7 +25,9 @@ const plugins = [
     ],
 ];
 
-if (process.env.HOT_RELOAD == 1) {
+// enable hot-loader in development
+// and disabled it for less transform code when we build bundle in production mode
+if (process.env.NODE_ENV === 'development') {
   plugins.unshift('react-hot-loader/babel')
 }
 

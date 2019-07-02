@@ -21,7 +21,7 @@ const config = {
         main: './src/main.js',
     },
     output: {
-        // to fix: 生产环境下所有的 name 都会使用 chunkFilename 生成
+        // using contenthash after webpack 4.17.0 for javascript
         filename: 'js/[name].[contenthash:8].js',
         path: path.resolve(__dirname, '../dist'),
         chunkFilename: 'js/[name].[contenthash:8].js',
@@ -39,11 +39,13 @@ const config = {
         rules: [
             {
                 parser: {
+                    // disabled require.ensure in dynamic import case
                     requireEnsure: false,
                 }
             },
             {
                 test: /\.m?js$/,
+                // 
                 include: path.resolve(__dirname, '../src'),
                 use: {
                     loader: 'happypack/loader?id=babel',
@@ -106,13 +108,17 @@ const config = {
     },
     plugins: [
         new CleanWebpackPlugin(),
+        // give dynamic chunk a name instead of id
+        // if we use auto-increment id by default, and then we hardly to have a stable file signature
         new webpack.NamedChunksPlugin(
             chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
         ),
+        // help split lodash
         new LodashModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             title: "react 模版",
             template: path.resolve(__dirname, '../public/index-prod.html'),
+            // optimize html template
             minify: {
                 removeComments: true,
                 collapseWhitespace: true,
@@ -125,6 +131,7 @@ const config = {
                 minifyURLs: true,
             },
         }),
+        // inject webpack runtime code
         new InlineManifestWebpackPlugin('manifest'),
         new HappyPack({
             id: 'styles',
@@ -145,6 +152,8 @@ const config = {
             filename: 'style/[name].[contenthash:8].css',
             chunkFileName: 'style/[name].[contenthash:8].chunk.css',
         }),
+        // remove unused selector from CSS file
+        // see https://github.com/webpack-contrib/purifycss-webpack
         new PurifyCSSPlugin({
             paths: glob.sync(`${path.join(__dirname, "../src")}/**/*.js`, { nodir: true }),
         }),
@@ -178,8 +187,8 @@ const config = {
     },
 }
 
-// analysis bundle
-if (process.env.SHOW_REPORT == 1) {
+// analysis bundle size
+if (process.env.SHOW_REPORT === '1') {
     const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
     config.plugins.push(new BundleAnalyzerPlugin())
 }
