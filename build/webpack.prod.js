@@ -11,6 +11,7 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const PurifyCSSPlugin = require('purifycss-webpack');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 // TODO: css 关键路径渲染 https://github.com/addyosmani/critical-path-css-tools
@@ -162,6 +163,8 @@ const config = {
             threadPool: happyThreadPool,
             loaders: ['babel-loader?cacheDirectory'],
         }),
+        // make the output more clean and friendly in the terminal interface
+        new FriendErrorsWebpackPlugin(),
     ],
     optimization: {
         moduleIds: 'hashed',
@@ -185,6 +188,7 @@ const config = {
             name: "manifest",
         },
     },
+    stats: 'errors-only',
 }
 
 // analysis bundle size
