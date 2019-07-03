@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HappyPack = require('happypack');
+const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 
@@ -109,10 +110,12 @@ module.exports = {
                 "sass-loader",
             ],
         }),
+        new FriendErrorsWebpackPlugin(),
     ],
     optimization: {
         removeAvailableModules: false,
         removeEmptyChunks: false,
         splitChunks: false,
     },
+    stats: 'errors-only',
 }
