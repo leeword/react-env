@@ -112,7 +112,7 @@ const config = {
         // give dynamic chunk a name instead of id
         // if we use auto-increment id by default, and then we hardly to have a stable file signature
         new webpack.NamedChunksPlugin(
-            chunk => chunk.name || Array.from(chunk.modulesIterable, m => m.id).join("_")
+            chunk => chunk.name || chunk.mapModules(m => path.relative(m.context, m.request)).join("_")
         ),
         // help split lodash
         new LodashModuleReplacementPlugin(),
