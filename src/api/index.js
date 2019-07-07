@@ -6,6 +6,7 @@ import createHTTPRequest from './http'
  */
 async function asyncCapture(api, method = 'get', params) {
   try {
+      method = method.toLowerCase()
       let response = await createHTTPRequest[method](api, params);
 
       return [null, response]

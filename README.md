@@ -1,5 +1,5 @@
-# web-template
-A template for initial web project with react and webpack
+# React-env
+A project for initial web project with react and webpack
 
 ## get start
 ```shell
