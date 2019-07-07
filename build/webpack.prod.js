@@ -2,7 +2,6 @@ const path = require('path');
 const glob = require("glob");
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -109,10 +108,10 @@ const config = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        // give dynamic chunk a name instead of id
+        // give dynamic chunk a name instead of id when `webpackChunkName` is not defined
         // if we use auto-increment id by default, and then we hardly to have a stable file signature
         new webpack.NamedChunksPlugin(
-            chunk => chunk.name || chunk.mapModules(m => path.relative(m.context, m.request)).join("_")
+            chunk => chunk.name || Array.from(chunk.modulesIterable, m => path.relative(m.context, m.request)).join("_")
         ),
         // help split lodash
         new LodashModuleReplacementPlugin(),
@@ -132,7 +131,7 @@ const config = {
                 minifyURLs: true,
             },
         }),
-        // inject webpack runtime code
+        // inject webpack runtime code into html file
         new InlineManifestWebpackPlugin('manifest'),
         new HappyPack({
             id: 'styles',
@@ -148,11 +147,14 @@ const config = {
                 'sass-loader',
             ],
         }),
+        // fix css generate extra js file in webpack4
         new FixStyleOnlyEntriesPlugin(),
         new MiniCssExtractPlugin({
             filename: 'style/[name].[contenthash:8].css',
             chunkFileName: 'style/[name].[contenthash:8].chunk.css',
         }),
+        // minify css
+        new OptimizeCssAssetsWebpackPlugin(),
         // remove unused selector from CSS file
         // see https://github.com/webpack-contrib/purifycss-webpack
         new PurifyCSSPlugin({
@@ -168,13 +170,20 @@ const config = {
     ],
     optimization: {
         moduleIds: 'hashed',
-        minimizer: [new ParallelUglifyPlugin({uglifyJS: {}}), new OptimizeCssAssetsWebpackPlugin()],
         splitChunks: {
             cacheGroups: {
-                commons: {
+                vendors: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: 'vendor',
+                    name: 'vendors',
+                    chunks: 'all',
+                    priority: -10,
+                    minChunks: 1,
+                },
+                commons: {
+                    name: 'commons',
                     chunks: 'initial',
+                    minChunks: 2,
+                    priority: -9,
                 },
                 styles: {
                     name: 'styles',
@@ -189,6 +198,7 @@ const config = {
         },
     },
     stats: 'errors-only',
+    performance: false,
 }
 
 // analysis bundle size

@@ -7,6 +7,7 @@ const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 
 module.exports = {
+    // Enables NamedChunksPlugin and NamedModulesPlugin.
     mode: 'development',
     entry: [
         'react-hot-loader/patch',
@@ -68,11 +69,10 @@ module.exports = {
         ],
     },
     devtool: 'cheap-module-eval-source-map',
-    watch: true,
     devServer: {
         hot: true,
         open: true,
-        historyApiFallback: true,        
+        historyApiFallback: true,
         watchOptions: {
             ignored: /node_modules/,
             aggregateTimeout: 300,
@@ -80,8 +80,6 @@ module.exports = {
         },
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
         new webpack.DllReferencePlugin({
             manifest: require('../dll/react.manifest.json'),
         }),
