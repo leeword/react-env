@@ -1,28 +1,28 @@
 const presets = [
-    [
-      '@babel/env',
-      {
-        modules: false,
-        useBuiltIns: 'usage',
-        corejs: '3.0.0',
-      },
-    ],
-    '@babel/react',
+  [
+    '@babel/env',
+    {
+      modules: false,
+      useBuiltIns: 'usage',
+      corejs: '3.0.0',
+    },
+  ],
+  '@babel/react',
 ];
 
 const plugins = [
-    // split lodash
-    'lodash',
-    '@babel/syntax-dynamic-import',
-    '@babel/proposal-class-properties',
-    [
-      // remove react propTypes in production mode
-      'transform-react-remove-prop-types',
-        {
-          'mode': 'wrap',
-          'ignoreFilenames': ['node_modules']
-        },
-    ],
+  // split lodash
+  'lodash',
+  '@babel/syntax-dynamic-import',
+  '@babel/proposal-class-properties',
+  [
+    // remove react propTypes in production mode
+    'transform-react-remove-prop-types',
+    {
+      mode: 'wrap',
+      ignoreFilenames: ['node_modules']
+    },
+  ],
 ];
 
 // enable hot-loader in development
@@ -32,6 +32,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 module.exports = {
-    presets,
-    plugins,
+  presets,
+  plugins,
 };
