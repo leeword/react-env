@@ -40,7 +40,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   // 默认 200 - 300 之间的状态码执行 fulFilled 函数
   response => response,
-  error => {
+  (error) => {
     // 被手动取消的响应没有 response
     if (error.response) {
       handleErrorStatus(error.response.status)

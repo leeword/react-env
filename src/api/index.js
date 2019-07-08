@@ -1,17 +1,17 @@
 import createHTTPRequest from './http'
 
 /**
- * 
+ *
  * @description async await 统一捕获异常
  */
 async function asyncCapture(api, method = 'get', params) {
   try {
-      method = method.toLowerCase()
-      let response = await createHTTPRequest[method](api, params);
+    method = method.toLowerCase()
+    const response = await createHTTPRequest[method](api, params);
 
-      return [null, response]
+    return [null, response]
   } catch (error) {
-      return [error, null]
+    return [error, null]
   }
 }
 

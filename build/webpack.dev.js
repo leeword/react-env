@@ -40,7 +40,7 @@ module.exports = {
                 test: /\.m?js$/,
                 include: path.resolve(__dirname, '../src'),
                 use: {
-                  loader: 'happypack/loader?id=babel',
+                    loader: 'happypack/loader?id=babel',
                 },
             },
             {
@@ -90,7 +90,10 @@ module.exports = {
         new HappyPack({
             id: 'babel',
             threadPool: happyThreadPool,
-            loaders: ['babel-loader?cacheDirectory'],
+            loaders: [
+                'babel-loader?cacheDirectory',
+                'eslint-loader',
+            ],
         }),
         new HappyPack({
             id: 'styles',
