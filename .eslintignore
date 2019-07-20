@@ -2,7 +2,6 @@
 
 dist/
 dll/
-build/
 
 postcss.config.js
 babel.config.js
