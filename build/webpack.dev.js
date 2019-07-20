@@ -4,6 +4,8 @@ const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.base');
 
+const cwd = process.cwd();
+
 module.exports = merge(baseConfig, {
   // Enables NamedChunksPlugin and NamedModulesPlugin.
   mode: 'development',
@@ -13,7 +15,6 @@ module.exports = merge(baseConfig, {
   ],
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, '../dist'),
     chunkFilename: '[name].chunk.js',
     publicPath: '/',
     pathinfo: false,
@@ -60,7 +61,7 @@ module.exports = merge(baseConfig, {
     }),
     new HtmlWebpackPlugin({
       title: 'react 模版',
-      template: path.resolve(__dirname, '../public/index-dev.html'),
+      template: path.resolve(cwd, 'public/index-dev.html'),
     }),
   ],
   optimization: {
