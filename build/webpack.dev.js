@@ -45,7 +45,7 @@ module.exports = {
             },
             {
                 test: /\.(sa|sc|c)ss$/,
-                use:  {
+                use: {
                     loader: 'happypack/loader?id=styles',
                 },
             },

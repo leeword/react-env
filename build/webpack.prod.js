@@ -52,7 +52,7 @@ const config = {
                 },
             },
             {
-                test:  /\.(sa|sc|c)ss$/,
+                test: /\.(sa|sc|c)ss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
@@ -75,23 +75,23 @@ const config = {
                         loader: 'image-webpack-loader',
                         options: {
                             mozjpeg: {
-                              progressive: true,
-                              quality: 65
+                                progressive: true,
+                                quality: 65
                             },
                             optipng: {
-                              enabled: false,
+                                enabled: false,
                             },
                             pngquant: {
-                              quality: '65-90',
-                              speed: 4
+                                quality: '65-90',
+                                speed: 4
                             },
                             gifsicle: {
-                              interlaced: false,
+                                interlaced: false,
                             },
                             webp: {
-                              quality: 75
+                                quality: 75
                             }
-                          },
+                        },
                     },
                 ],
             },
