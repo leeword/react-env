@@ -7,6 +7,7 @@ module.exports = {
   mode: 'none',
   entry: {
     react: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'react-router-dom'],
+    lib: ['qs', 'axios'],
   },
   output: {
     filename: '[name].dll.js',
@@ -15,12 +16,15 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'react-dom': '@hot-loader/react-dom',
+      'react-dom$': '@hot-loader/react-dom',
     },
-    mainFields: ['module', 'main'],
+    mainFields: ['browser', 'module', 'main'],
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
     new webpack.DllPlugin({
       name: '_dll_[name]',
       path: path.join(__dirname, '../dll', '[name].manifest.json'),

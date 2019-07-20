@@ -55,6 +55,9 @@ module.exports = merge(baseConfig, {
     new webpack.DllReferencePlugin({
       manifest: require('../dll/react.manifest.json'),
     }),
+    new webpack.DllReferencePlugin({
+      manifest: require('../dll/lib.manifest.json'),
+    }),
     new HtmlWebpackPlugin({
       title: 'react 模版',
       template: path.resolve(__dirname, '../public/index-dev.html'),
