@@ -35,7 +35,6 @@ module.exports = {
       },
       {
         test: /\.(sa|sc|c)ss$/,
-        exclude: path.resolve(root, 'src/js'),
         use: [
           isDev ? {
             loader: 'style-loader',
