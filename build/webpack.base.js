@@ -6,17 +6,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
-const root = path.resolve(__dirname, '../');
+const cwd = process.cwd();
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
   resolve: {
     alias: {
-      '@': path.resolve(root, 'src'),
+      '@': path.resolve(cwd, 'src'),
     },
     mainFields: ['browser', 'module', 'main'],
     extensions: ['.js', '.json'],
-    modules: [path.resolve(root, 'node_modules')],
+    modules: [path.resolve(cwd, 'node_modules')],
   },
   module: {
     rules: [
@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.m?js$/,
-        include: path.resolve(root, 'src'),
+        include: path.resolve(cwd, 'src'),
         use: {
           loader: 'happypack/loader?id=babel',
         },

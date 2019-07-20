@@ -11,6 +11,8 @@ const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plug
 const PurifyCSSPlugin = require('purifycss-webpack');
 const baseConfig = require('./webpack.base');
 
+const cwd = process.cwd();
+
 const config = merge(baseConfig, {
   mode: 'production',
   entry: {
@@ -19,7 +21,6 @@ const config = merge(baseConfig, {
   output: {
     // use contenthash after webpack 4.17.0 for javascript long term caching
     filename: 'js/[name].[contenthash:8].js',
-    path: path.resolve(__dirname, '../dist'),
     chunkFilename: 'js/[name].[contenthash:8].js',
     publicPath: '/',
   },
@@ -71,7 +72,7 @@ const config = merge(baseConfig, {
     ),
     new HtmlWebpackPlugin({
       title: 'react 模版',
-      template: path.resolve(__dirname, '../public/index-prod.html'),
+      template: path.resolve(cwd, 'public/index-prod.html'),
       // optimize html template
       minify: {
         removeComments: true,
@@ -98,7 +99,7 @@ const config = merge(baseConfig, {
     // remove unused selector from CSS file
     // see https://github.com/webpack-contrib/purifycss-webpack
     new PurifyCSSPlugin({
-      paths: glob.sync(path.resolve(__dirname, '../src/**/*.js'), { nodir: true }),
+      paths: glob.sync(path.resolve(cwd, 'src/**/*.js'), { nodir: true }),
     }),
   ],
   optimization: {
