@@ -25,14 +25,14 @@ const plugins = [
     '@babel/proposal-class-properties',
     {
       loose: true,
-    }
+    },
   ],
   [
     // remove react propTypes in production mode
     'transform-react-remove-prop-types',
     {
       mode: 'wrap',
-      ignoreFilenames: ['node_modules']
+      ignoreFilenames: ['node_modules'],
     },
   ],
 ];

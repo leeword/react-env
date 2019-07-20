@@ -2,6 +2,4 @@
 
 dist/
 dll/
-
-postcss.config.js
-babel.config.js
+public/
