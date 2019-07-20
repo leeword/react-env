@@ -18,11 +18,23 @@ module.exports = {
     },
     rules: {
         'semi': OFF,
+        'global-require': OFF,
         'import/prefer-default-export': 'off',
         'no-param-reassign': 'off',
         'no-unused-expressions': ERROR,
         'no-unused-vars': [ERROR, { args: 'none' }],
         'no-use-before-define': [ERROR, { functions: false, variables: false }],
+        'import/no-extraneous-dependencies': [
+            'error',
+            {
+                'devDependencies': [
+                    'build/**',
+                    'test/**',
+                ],
+                'optionalDependencies': false,
+                'peerDependencies': false,
+            }
+        ],
         'no-useless-concat': OFF,
         'no-var': ERROR,
 

@@ -4,17 +4,29 @@ const presets = [
     {
       modules: false,
       useBuiltIns: 'usage',
-      corejs: '3.0.0',
+      corejs: 3,
+      loose: true,
     },
   ],
   '@babel/react',
 ];
 
 const plugins = [
-  // split lodash
   'lodash',
   '@babel/syntax-dynamic-import',
-  '@babel/proposal-class-properties',
+  '@babel/plugin-proposal-optional-chaining',
+  [
+    '@babel/plugin-proposal-decorators',
+    {
+      decoratorsBeforeExport: true,
+    },
+  ],
+  [
+    '@babel/proposal-class-properties',
+    {
+      loose: true,
+    }
+  ],
   [
     // remove react propTypes in production mode
     'transform-react-remove-prop-types',
