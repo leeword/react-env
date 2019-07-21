@@ -1,5 +1,5 @@
 // development mode dll config
-const path = require('path');
+const { resolve, join } = require('path');
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     filename: '[name].dll.js',
-    path: path.resolve(__dirname, '../dll'),
+    path: resolve(__dirname, '../dll'),
     library: '_dll_[name]',
   },
   resolve: {
@@ -27,7 +27,7 @@ module.exports = {
     }),
     new webpack.DllPlugin({
       name: '_dll_[name]',
-      path: path.join(__dirname, '../dll', '[name].manifest.json'),
+      path: join(__dirname, '../dll', '[name].manifest.json'),
     }),
   ],
 }
