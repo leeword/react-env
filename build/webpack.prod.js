@@ -1,4 +1,4 @@
-const path = require('path');
+const { resolve, relative } = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
@@ -68,11 +68,12 @@ const config = merge(baseConfig, {
     // give dynamic chunk a name instead of id when `webpackChunkName` is not defined
     // if we use auto-increment id by default, and then we hardly to have a stable file signature
     new webpack.NamedChunksPlugin(
-      chunk => chunk.name || Array.from(chunk.modulesIterable, m => path.relative(m.context, m.request)).join('_'),
+      chunk => chunk.name || Array.from(chunk.modulesIterable, m => relative(m.context, m.request)).join('_'),
     ),
     new HtmlWebpackPlugin({
       title: 'react 模版',
-      template: path.resolve(cwd, 'public/index-prod.html'),
+      template: resolve(cwd, 'public/index-prod.html'),
+      chunksSortMode: 'none',
       // optimize html template
       minify: {
         removeComments: true,
@@ -99,7 +100,7 @@ const config = merge(baseConfig, {
     // remove unused selector from CSS file
     // see https://github.com/webpack-contrib/purifycss-webpack
     new PurifyCSSPlugin({
-      paths: glob.sync(path.resolve(cwd, 'src/**/*.js'), { nodir: true }),
+      paths: glob.sync(resolve(cwd, 'src/**/*.js'), { nodir: true }),
     }),
   ],
   optimization: {
@@ -142,7 +143,6 @@ const config = merge(baseConfig, {
       name: 'manifest',
     },
   },
-  performance: false,
 })
 
 // analysis bundle size

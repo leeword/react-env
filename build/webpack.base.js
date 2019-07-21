@@ -1,4 +1,4 @@
-const path = require('path');
+const { resolve } = require('path');
 const os = require('os');
 const HappyPack = require('happypack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
@@ -12,11 +12,11 @@ const isDev = process.env.NODE_ENV === 'development';
 module.exports = {
   resolve: {
     alias: {
-      '@': path.resolve(cwd, 'src'),
+      '~': resolve(cwd, 'src'),
     },
     mainFields: ['browser', 'module', 'main'],
     extensions: ['.js', '.json'],
-    modules: [path.resolve(cwd, 'node_modules')],
+    modules: [resolve(cwd, 'node_modules')],
   },
   module: {
     rules: [
@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.m?js$/,
-        include: path.resolve(cwd, 'src'),
+        include: resolve(cwd, 'src'),
         use: {
           loader: 'happypack/loader?id=babel',
         },
@@ -91,4 +91,5 @@ module.exports = {
     new FriendErrorsWebpackPlugin(),
   ],
   stats: 'errors-only',
+  performance: false,
 }
