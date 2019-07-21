@@ -1,4 +1,4 @@
-const path = require('path');
+const { resolve } = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -61,7 +61,9 @@ module.exports = merge(baseConfig, {
     }),
     new HtmlWebpackPlugin({
       title: 'react 模版',
-      template: path.resolve(cwd, 'public/index-dev.html'),
+      template: resolve(cwd, 'public/index-dev.html'),
+      // https://github.com/jantimon/html-webpack-plugin/issues/870
+      chunksSortMode: 'none',
     }),
   ],
   optimization: {
