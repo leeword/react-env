@@ -102,6 +102,19 @@ const config = merge(baseConfig, {
     new PurifyCSSPlugin({
       paths: glob.sync(resolve(cwd, 'src/**/*.js'), { nodir: true }),
     }),
+    // throw errors when build error
+    function handleErrorBuild() {
+      this.hooks.done.tap('done', (stats) => {
+        if (
+          stats.compilation.errors
+          && stats.compilation.errors.length
+          && process.argv.indexOf('--watch') === -1
+        ) {
+          console.log('build error'); //eslint-disable-line
+          process.exit(1);
+        }
+      })
+    },
   ],
   optimization: {
     moduleIds: 'hashed',
