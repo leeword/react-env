@@ -1,13 +1,13 @@
 const { resolve } = require('path');
 const os = require('os');
-const HappyPack = require('happypack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const cpusLength = os.cpus().length;
 const cwd = process.cwd();
 const isDev = process.env.NODE_ENV === 'development';
+const sourceMapOption = isDev ? { sourceMap: true } : {}
 
 module.exports = {
   resolve: {
@@ -29,20 +29,46 @@ module.exports = {
       {
         test: /\.m?js$/,
         include: resolve(cwd, 'src'),
-        use: {
-          loader: 'happypack/loader?id=babel',
-        },
+        use: [
+          {
+            loader: 'thread-loader',
+            options: {
+              workers: cpusLength,
+            },
+          },
+          'babel-loader?cacheDirectory',
+          isDev && 'eslint-loader',
+        ].filter(Boolean),
       },
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
+          {
+            loader: 'thread-loader',
+            options: {
+              workers: cpusLength,
+            },
+          },
           isDev ? {
             loader: 'style-loader',
             options: {
               sourceMap: true,
             },
           } : MiniCssExtractPlugin.loader,
-          'happypack/loader?id=styles',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              ...sourceMapOption,
+            },
+          },
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              ...sourceMapOption,
+            },
+          },
         ],
       },
       {
@@ -59,34 +85,6 @@ module.exports = {
   plugins: [
     // help split lodash
     new LodashModuleReplacementPlugin(),
-    // compile javascript in parallel
-    new HappyPack({
-      id: 'babel',
-      threadPool: happyThreadPool,
-      loaders: ['babel-loader?cacheDirectory'].concat(
-        isDev ? 'eslint-loader' : [],
-      ),
-    }),
-    new HappyPack({
-      id: 'styles',
-      threadPool: happyThreadPool,
-      loaders: [
-        {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 2,
-            ...(isDev ? { sourceMap: true } : {}),
-          },
-        },
-        'postcss-loader',
-        {
-          loader: 'sass-loader',
-          options: {
-            ...(isDev ? { sourceMap: true } : {}),
-          },
-        },
-      ],
-    }),
     // make the output more clean and friendly in the terminal interface
     new FriendErrorsWebpackPlugin(),
   ],
