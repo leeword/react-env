@@ -8,7 +8,7 @@ const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
-const PurifyCSSPlugin = require('purifycss-webpack');
+const PurgeCssPlugin = require('purgecss-webpack-plugin')
 const baseConfig = require('./webpack.base');
 
 const cwd = process.cwd();
@@ -99,7 +99,7 @@ const config = merge(baseConfig, {
     new OptimizeCssAssetsWebpackPlugin(),
     // remove unused selector from CSS file
     // see https://github.com/webpack-contrib/purifycss-webpack
-    new PurifyCSSPlugin({
+    new PurgeCssPlugin({
       paths: glob.sync(resolve(cwd, 'src/**/*.js'), { nodir: true }),
     }),
     // throw errors when build error
