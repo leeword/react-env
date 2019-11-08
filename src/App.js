@@ -2,14 +2,21 @@ import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { HashRouter as Router, Route, Link } from 'react-router-dom'
+
+import abnormalError from './asserts/abnormal_error.png'
 
 function Index() {
-  return <h2>Home</h2>;
+  return <h2 className="home-title">Home</h2>;
 }
 
 function About() {
-  return <h2>About</h2>;
+  return (
+    <h2>
+      About
+      <img alt="测试" src={abnormalError} />
+    </h2>
+  );
 }
 
 function Users() {
