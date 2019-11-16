@@ -4,7 +4,7 @@ const presets = [
     {
       modules: false,
       useBuiltIns: 'usage',
-      corejs: 3,
+      corejs: 2,
       loose: true,
     },
   ],
