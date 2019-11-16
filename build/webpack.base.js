@@ -28,7 +28,7 @@ module.exports = {
       },
       {
         test: /\.m?js$/,
-        include: resolve(cwd, 'src'),
+        exclude: resolve(cwd, 'node_modules'),
         use: [
           {
             loader: 'thread-loader',
@@ -43,7 +43,8 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          {
+          // thread-loader can't work with MiniCssExtractPlugin.loader
+          isDev && {
             loader: 'thread-loader',
             options: {
               workers: cpusLength,
@@ -69,7 +70,7 @@ module.exports = {
               ...sourceMapOption,
             },
           },
-        ],
+        ].filter(Boolean),
       },
       {
         test: /\.(woff2?|eot|ttf|otf)$/,

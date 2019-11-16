@@ -2,6 +2,7 @@ const { resolve, relative } = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const { GenerateSW } = require('workbox-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
@@ -101,6 +102,27 @@ const config = merge(baseConfig, {
     // see https://github.com/webpack-contrib/purifycss-webpack
     new PurgeCssPlugin({
       paths: glob.sync(resolve(cwd, 'src/**/*.js'), { nodir: true }),
+    }),
+    new GenerateSW({
+      swDest: 'sw.js',
+      exclude: [
+        /\.(gif|png|jpe?g|webp|svg)$/,
+      ],
+      excludeChunks: ['manifest'],
+      ignoreURLParametersMatching: [/./],
+      importWorkboxFrom: 'local',
+      cacheId: 'fzr:static',
+      skipWaiting: true,
+      clientsClaim: true,
+      runtimeCaching: [
+        {
+          urlPattern: /\.(gif|png|jpe?g|webp|svg)$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'fzr:images',
+          },
+        },
+      ],
     }),
     // throw errors when build error
     function handleErrorBuild() {
