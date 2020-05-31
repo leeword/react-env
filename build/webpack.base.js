@@ -53,13 +53,18 @@ module.exports = {
           isDev ? {
             loader: 'style-loader',
             options: {
-              sourceMap: true,
+              ...sourceMapOption,
             },
           } : MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
               importLoaders: 2,
+              // enable scope css module
+              modules: {
+                mode: 'global',
+                localIdentName: '[local]-[hash:base64:5]',
+              },
               ...sourceMapOption,
             },
           },
@@ -90,5 +95,7 @@ module.exports = {
     new FriendErrorsWebpackPlugin(),
   ],
   stats: 'errors-only',
+  // do not use default performance analysis
+  // use webpack-bundle-analyzer instead
   performance: false,
 }
