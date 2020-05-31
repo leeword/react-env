@@ -2,7 +2,10 @@
   "name": "react-env",
   "version": "1.0.0",
   "description": "A template for initial react project with webpack",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zackley/react-env.git"
+  },
   "scripts": {
     "precommit": "lint-staged",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --color",
@@ -16,7 +19,13 @@
     "redux",
     "axios"
   ],
-  "author": "Frank Fu",
+  "author": {
+    "name": "Frank Fu",
+    "email": "fz1986856560@gmail.com"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.4.4",
