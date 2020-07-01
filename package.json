@@ -4,7 +4,7 @@
   "description": "A template for initial react project with webpack",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zackley/react-env.git"
+    "url": "https://github.com/leeword/react-env.git"
   },
   "scripts": {
     "start": "npm run dev",
@@ -37,7 +37,8 @@
   "license": "MIT",
   "sideEffects": [
     "dist/*",
-    "*.scss"
+    "*.scss",
+    "src/sw-register.js"
   ],
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -69,6 +70,7 @@
     "husky": "^4.2.5",
     "image-webpack-loader": "^5.0.0",
     "inline-manifest-webpack-plugin": "^4.0.2",
+    "live-server": "^1.2.1",
     "lodash-webpack-plugin": "^0.11.5",
     "mini-css-extract-plugin": "^0.7.0",
     "node-sass": "^4.12.0",
