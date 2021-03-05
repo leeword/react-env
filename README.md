@@ -1,9 +1,12 @@
 # React-env
-A project for initial web project with react and webpack
+使用 `React` 和 `webpack` 搭建的模板仓库
 
-## get start
+## 开始使用
 ```shell
 yarn install
-yarn build:dll
 yarn dev
 ```
+
+## 未来计划
+1. api 中间件支持
+2. 封装工程相关内容并抽离仓库
