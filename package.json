@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "npm run dev",
+    "postinstall": "npm run build:dll",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.dev.js --color",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.js --progress",
     "build:dll": "webpack --config build/webpack.dll.js",
@@ -38,6 +39,7 @@
   "sideEffects": [
     "dist/*",
     "*.scss",
+    "*.css",
     "src/sw-register.js"
   ],
   "devDependencies": {
@@ -93,6 +95,7 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "^16.8.3",
+    "antd": "^4.13.0",
     "axios": "^0.19.0",
     "core-js": "2",
     "lodash": "^4.17.15",
