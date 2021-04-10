@@ -23,6 +23,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-unused-expressions': ERROR,
     'no-unused-vars': [ERROR, { args: 'none' }],
+    'no-restricted-syntax': OFF,
     'no-use-before-define': [ERROR, { functions: false, variables: false }],
     'import/no-extraneous-dependencies': [
       'error',
