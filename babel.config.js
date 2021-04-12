@@ -3,7 +3,7 @@ const presets = [
     '@babel/env',
     {
       modules: false,
-      useBuiltIns: 'usage',
+      useBuiltIns: 'entry',
       corejs: 2,
       loose: true,
     },
@@ -13,6 +13,12 @@ const presets = [
 
 const plugins = [
   'lodash',
+  [
+    '@babel/plugin-transform-runtime',
+    {
+      corejs: false,
+    },
+  ],
   '@babel/syntax-dynamic-import',
   '@babel/plugin-proposal-optional-chaining',
   [
