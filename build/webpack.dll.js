@@ -7,7 +7,6 @@ module.exports = {
   mode: 'none',
   entry: {
     react: ['react', 'react-dom', 'redux', 'react-redux', 'redux-thunk', 'react-router-dom'],
-    lib: ['qs', 'axios'],
   },
   output: {
     filename: '[name].dll.js',
