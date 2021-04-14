@@ -62,10 +62,12 @@ function getOptions(ctx) {
     method = 'GET',
     timeout: delay,
     headers = {},
+    query,
+    payload,
     fetchOptions = {},
   } = ctx;
   const upperMethod = method.toUpperCase();
-  const params = ctx.payload || ctx.query || null;
+  const params = payload || query || null;
   const dataMethods = ['PUT', 'POST', 'PATCH'].includes(upperMethod);
 
   const options = {
@@ -73,26 +75,27 @@ function getOptions(ctx) {
     mode: 'cors',
     headers,
     timeout: delay,
+    credentials: 'include',
     ...(fetchOptions),
   };
   if (dataMethods && params) {
-    if ((ctx.payload || ctx.query) instanceof FormData) {
+    if (params instanceof FormData) {
       options.body = params;
     } else {
       options.headers['Content-Type'] = 'application/json;charset=UTF-8';
       options.body = JSON.stringify(params);
     }
   }
-  // `post`请求也有可能存在`query`
+  // `post`请求也可能有`query string`
   const slash = url.includes('?') ? '&' : '?';
-  options.url = ctx.query ? `${url}${slash}${formatParam(ctx.query)}` : url;
+  options.url = (query && !payload) ? `${url}${slash}${formatParam(query)}` : url;
 
   return options;
 }
 
 export default async function(ctx) {
   const { url, options } = getOptions(ctx);
-  const { responseParse = true, validateStatus } = ctx;
+  const { parseResponse = true, validateStatus } = ctx;
 
   try {
     const res = await fetchWithTimeout(url, options);
@@ -103,13 +106,12 @@ export default async function(ctx) {
 
     ctx.response = res;
     // 不解析 http 响应
-    if (!responseParse) { return ctx }
+    if (!parseResponse) { return ctx }
 
     ctx.body = await res.json();
 
     return ctx;
   } catch (error) {
-    console.error('ERROR in fetch: ', error);
     // 继续向上抛出错误
     throw new Error(`[Request]: ${url} 请求异常，请稍后再试。`);
   }

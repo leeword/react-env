@@ -42,11 +42,34 @@ module.exports = {
     'jsx-quotes': [ERROR, 'prefer-double'],
     'space-before-blocks': ERROR,
     'space-before-function-paren': OFF,
-    'quotes': [ERROR, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+    'quotes': [
+      ERROR,
+      'single',
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: true,
+      }
+    ],
 
     'react/jsx-indent': [ERROR, 2],
-    'react/jsx-filename-extension': [OFF, {
-      extensions: ['.js', '.jsx'],
-    }]
+    'react/jsx-filename-extension': [
+      OFF,
+      {
+        extensions: ['.js', '.jsx'],
+      }
+    ],
+    'import/resolver': {
+      webpack: {
+        config: require('path').resolve(__dirname, 'build/webpack.dev.js'),
+      },
+    },
+    'import/no-unresolved': OFF,
+    'import/extensions': [
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.json',
+    ],
   },
 }

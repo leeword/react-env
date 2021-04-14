@@ -1,3 +1,5 @@
+import { SILENT_LEVEL } from '@/const';
+
 export function noop() {}
 
 /**
@@ -42,27 +44,77 @@ export function compose(middleware) {
   }
 }
 
-export function optionDefaulter(option) {
-  const shadowClone = { ...option };
+class OptionDefaulter {
+  constructor(options = {}) {
+    this.options = Object.assign(
+      {},
+      options,
+    );
+  }
 
-  setDefaultVal(option, 'originUrl', option.url);
-  setDefaultVal(option, 'timeout', 10000);
-  setDefaultVal(option, 'query', option.params);
-  setDefaultVal(option, 'method', 'GET');
-  setDefaultVal(option, 'type', 'fetch');
-  setDefaultVal(option, 'ignoreError', false);
-  setDefaultVal(option, 'validateStatus', validateStatus);
+  get() {
+    return this.options;
+  }
 
-  return shadowClone;
-}
+  set(key, defaultValue) {
+    if (typeof defaultValue === 'function') {
+      this.options[key] = defaultValue(this.options, key);
+    } else {
+      this.options[key] = this.options[key] || defaultValue;
+    }
 
-function setDefaultVal(option, key, defaultValue) {
-  if (typeof defaultValue === 'function') {
-    option[key] = defaultValue(option, key);
-  } else {
-    option[key] = option[key] || defaultValue;
+    return this;
   }
 }
+
+export function setDefault(options) {
+  const defaulter = new OptionDefaulter(options);
+
+  defaulter
+    .set('originURL', options.url)
+    .set('timeout', 10000)
+    .set('query', options.params)
+    .set('method', 'GET')
+    .set('type', 'fetch')
+    .set('headers', {})
+    .set('ignoreError', false)
+    .set('validateStatus', () => validateStatus)
+
+  return defaulter.get();
+}
+
+/**
+ * 简易 log 函数封装
+ *
+ * @returns {Object}
+ */
+export const log = (function logger() {
+  // 这里参考 bootstrap 的色值分类
+  // https://getbootstrap.com/docs/5.0/customize/color/
+  const typeConfig = [
+    { type: 'info', color: '#0dcaf0' },
+    { type: 'success', color: '#198754' },
+    { type: 'debug', color: '#6c757d' },
+    { type: 'warning', color: '#ffc107' },
+    { type: 'error', color: '#dc3545' },
+  ];
+
+  return typeConfig.reduce((result, el) => {
+    const { type, color } = el;
+    const silentLog = SILENT_LEVEL[type] || false;
+
+    result[type] = silentLog ? noop : function logFunc(...msg) {
+      /* eslint-disable no-console */
+      console.log(
+        `%c[${type.toUpperCase()}]: `,
+        `color:${color};font-weight:bold;`,
+        ...msg,
+      );
+    };
+
+    return result;
+  }, Object.create(null));
+}());
 
 export function downloadFromURL(url, fileName) {
   return new Promise((resolve, reject) => {
