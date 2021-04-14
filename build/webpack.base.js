@@ -1,5 +1,7 @@
 const { resolve } = require('path');
 const os = require('os');
+
+const webpack = require('webpack');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
@@ -12,7 +14,7 @@ const sourceMapOption = isDev ? { sourceMap: true } : {}
 module.exports = {
   resolve: {
     alias: {
-      '~': resolve(cwd, 'src'),
+      '@': resolve(cwd, 'src'),
     },
     mainFields: ['browser', 'module', 'main'],
     extensions: ['.js', '.json'],
@@ -93,6 +95,10 @@ module.exports = {
     new LodashModuleReplacementPlugin(),
     // make the output more clean and friendly in the terminal interface
     new FriendErrorsWebpackPlugin(),
+    // define compile constance
+    new webpack.DefinePlugin({
+      'process.env.USE_PROXY': JSON.stringify(process.env.USE_PROXY || ''),
+    }),
   ],
   stats: 'errors-only',
   // do not use default performance analysis

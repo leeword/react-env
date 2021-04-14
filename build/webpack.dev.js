@@ -45,7 +45,15 @@ module.exports = merge(baseConfig, {
       errors: true,
     },
     stats: 'errors-only',
+    proxy: {
+      '/proxy': {
+        // 更改为代理的 url
+        target: 'http://xxx.xxxxxx.com',
+        pathRewrite: { '^/proxy': '' },
+      },
+    },
     watchOptions: {
+      // 忽略 node_modules 文件夹变动, 如需要调试三方包注释`ignored`字段重启本地服务
       ignored: /node_modules/,
       aggregateTimeout: 300,
       poll: 1000,

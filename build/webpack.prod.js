@@ -181,7 +181,7 @@ const config = merge(baseConfig, {
 })
 
 // analysis bundle size
-if (process.env.SHOW_REPORT === '1') {
+if (process.env.SHOW_REPORT) {
   const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
   config.plugins.push(new BundleAnalyzerPlugin())
 }
