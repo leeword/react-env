@@ -1,10 +1,9 @@
-import { hot } from 'react-hot-loader/root'
-import React from 'react'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import { HashRouter as Router, Route, Link } from 'react-router-dom'
-
-import abnormalError from './asserts/abnormal_error.png'
+import { hot } from 'react-hot-loader/root';
+import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { HashRouter as Router, Route, Link } from 'react-router-dom';
+import abnormalError from './asserts/abnormal_error.png';
 
 function Index() {
   return <h2 className="home-title">Home</h2>;
@@ -23,9 +22,7 @@ function Users() {
   return <h2>Users</h2>;
 }
 
-const store = createStore((state, action) => ({
-  a: 1,
-}))
+const store = createStore((state, action) => ({ a: 1 }));
 
 function App() {
   return (
@@ -51,7 +48,7 @@ function App() {
         </div>
       </Router>
     </Provider>
-  )
+  );
 }
 
-export default hot(App)
+export default hot(App);

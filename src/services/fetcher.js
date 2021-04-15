@@ -8,9 +8,7 @@
 function timeout(url, delay = 10000) {
   return new Promise((r, reject) => {
     setTimeout(() => {
-      reject(
-        new Error(`[Request]: ${url} has been timeout after ${delay}ms`),
-      );
+      reject(new Error(`[Request]: ${url} has been timeout after ${delay}ms`));
     }, delay);
   });
 }
@@ -25,13 +23,7 @@ function timeout(url, delay = 10000) {
 function fetchWithTimeout(url, options = {}) {
   const { timeout: delay, ...fetchOptions } = options;
 
-  return Promise.race(
-    fetch(
-      url,
-      fetchOptions,
-    ),
-    timeout(url, delay),
-  );
+  return Promise.race(fetch(url, fetchOptions), timeout(url, delay));
 }
 
 /**
@@ -57,15 +49,7 @@ function formatParam(reqPara = {}) {
  * @returns {Object}
  */
 function getOptions(ctx) {
-  const {
-    url,
-    method = 'GET',
-    timeout: delay,
-    headers = {},
-    query,
-    payload,
-    fetchOptions = {},
-  } = ctx;
+  const { url, method = 'GET', timeout: delay, headers = {}, query, payload, fetchOptions = {} } = ctx;
   const upperMethod = method.toUpperCase();
   const params = payload || query || null;
   const dataMethods = ['PUT', 'POST', 'PATCH'].includes(upperMethod);
@@ -76,7 +60,7 @@ function getOptions(ctx) {
     headers,
     timeout: delay,
     credentials: 'include',
-    ...(fetchOptions),
+    ...fetchOptions,
   };
   if (dataMethods && params) {
     if (params instanceof FormData) {
@@ -88,12 +72,12 @@ function getOptions(ctx) {
   }
   // `post`请求也可能有`query string`
   const slash = url.includes('?') ? '&' : '?';
-  options.url = (query && !payload) ? `${url}${slash}${formatParam(query)}` : url;
+  options.url = query && !payload ? `${url}${slash}${formatParam(query)}` : url;
 
   return options;
 }
 
-export default async function(ctx) {
+export default async function (ctx) {
   const { url, options } = getOptions(ctx);
   const { parseResponse = true, validateStatus } = ctx;
 
@@ -106,7 +90,9 @@ export default async function(ctx) {
 
     ctx.response = res;
     // 不解析 http 响应
-    if (!parseResponse) { return ctx }
+    if (!parseResponse) {
+      return ctx;
+    }
 
     ctx.body = await res.json();
 

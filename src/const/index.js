@@ -17,6 +17,6 @@ export const SILENT_LEVEL = {
   info: !IS_PRODUCTION,
   success: !IS_PRODUCTION,
   debug: !IS_PRODUCTION,
-  warning: true,
+  warn: true,
   error: true,
 };

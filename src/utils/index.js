@@ -1,9 +1,4 @@
-import {
-  DAILY,
-  PRE,
-  PROD,
-  MOCK,
-} from '@/const';
+import { DAILY, PRE, PROD, MOCK } from '@/const';
 
 export function getURLParam(key) {
   const reg = new RegExp(`(^|&)${key}=([^&]*)(&|$)`);
@@ -22,8 +17,7 @@ export function getEnv() {
   const env = getURLParam('env');
 
   // 优先使用查询字符串里的标识判断环境
-  if (env
-    && [DAILY, PRE, PROD, MOCK].includes(env)) {
+  if (env && [DAILY, PRE, PROD, MOCK].includes(env)) {
     return env;
   }
   /** 根据域名特征自动判断环境 */
@@ -53,12 +47,10 @@ export function isLocalhost() {
   const { hostname } = window.location;
 
   return Boolean(
-    hostname === 'localhost'
-    // [::1] is the IPv6 localhost address.
-    || hostname === '[::1]'
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    || hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/,
-    ),
+    hostname === 'localhost' ||
+      // [::1] is the IPv6 localhost address.
+      hostname === '[::1]' ||
+      // 127.0.0.1/8 is considered localhost for IPv4.
+      hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
   );
 }

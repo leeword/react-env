@@ -46,7 +46,7 @@ const plugins = [
 // enable hot-loader in development
 // and disabled it for less transform code when we build bundle in production mode
 if (process.env.NODE_ENV === 'development') {
-  plugins.unshift('react-hot-loader/babel')
+  plugins.unshift('react-hot-loader/babel');
 }
 
 module.exports = {

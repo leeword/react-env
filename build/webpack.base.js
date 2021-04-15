@@ -9,7 +9,7 @@ const FriendErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const cpusLength = os.cpus().length;
 const cwd = process.cwd();
 const isDev = process.env.NODE_ENV === 'development';
-const sourceMapOption = isDev ? { sourceMap: true } : {}
+const sourceMapOption = isDev ? { sourceMap: true } : {};
 
 module.exports = {
   resolve: {
@@ -52,12 +52,14 @@ module.exports = {
               workers: cpusLength,
             },
           },
-          isDev ? {
-            loader: 'style-loader',
-            options: {
-              ...sourceMapOption,
-            },
-          } : MiniCssExtractPlugin.loader,
+          isDev
+            ? {
+                loader: 'style-loader',
+                options: {
+                  ...sourceMapOption,
+                },
+              }
+            : MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -104,4 +106,4 @@ module.exports = {
   // do not use default performance analysis
   // use webpack-bundle-analyzer instead
   performance: false,
-}
+};
