@@ -1,21 +1,7 @@
-import {
-  adapter,
-  printLogger,
-  handleURLPrefix,
-  addCrossSiteToken,
-  handleResponseError,
-} from './middleware';
-import {
-  compose,
-  setDefault,
-} from './helper';
+import { adapter, printLogger, handleURLPrefix, addCrossSiteToken, handleResponseError } from './middleware';
+import { compose, setDefault } from './helper';
 
-const middleware = [
-  printLogger,
-  handleURLPrefix,
-  addCrossSiteToken,
-  handleResponseError,
-].concat(adapter);
+const middleware = [printLogger, handleURLPrefix, addCrossSiteToken, handleResponseError].concat(adapter);
 
 const invoker = compose(middleware);
 
@@ -36,7 +22,7 @@ const invoker = compose(middleware);
  * @param {Function} [options.validateStatus] 有效的http状态码：默认200-300
  * @returns {Promise}
  */
-export default async function(api, options = {}) {
+export default async function (api, options = {}) {
   const opts = setDefault(options);
   const context = {
     url: api,

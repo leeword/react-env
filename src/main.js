@@ -1,19 +1,16 @@
-import React from 'react'
-import { render } from 'react-dom'
+import React from 'react';
+import { render } from 'react-dom';
 
-import App from './App'
-import './index.scss'
-import './sw-register'
+import App from './App';
+import './index.scss';
+import './sw-register';
 
 const renderApp = (Component) => {
-  render(
-    <Component />,
-    document.getElementById('root'),
-  )
-}
+  render(<Component />, document.getElementById('root'));
+};
 
-renderApp(App)
+renderApp(App);
 
 if (module.hot) {
-  module.hot.accept('./App', () => renderApp(App))
+  module.hot.accept('./App', () => renderApp(App));
 }

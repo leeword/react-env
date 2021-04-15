@@ -1,5 +1,5 @@
 // 用来验证 打包 文件
-const liveServer = require('live-server')
+const liveServer = require('live-server');
 
 // https://github.com/tapio/live-server
 liveServer.start({

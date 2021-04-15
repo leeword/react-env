@@ -6,17 +6,12 @@
  *   await next();
  *   // 收到响应后做一些处理
  * }
-*/
-import {
-  getURLPrefix,
-  getEnv,
-} from '@/utils';
+ */
+import { getURLPrefix, getEnv } from '@/utils';
 import fetcher from './fetcher';
 import uploader from './uploader';
 import download from './download';
-import {
-  log,
-} from './helper';
+import { log } from './helper';
 
 // 打印请求发起前后的信息
 export async function printLogger(ctx, next) {
@@ -26,7 +21,7 @@ export async function printLogger(ctx, next) {
   await next();
 
   const duration = Date.now() - start;
-  const method = ctx.body?.success ? 'info' : 'warning';
+  const method = ctx.body?.success ? 'info' : 'warn';
 
   log[method](`END -> ${ctx.originURL} - ${ctx.method} - ${duration}ms`, ctx.query || '', ctx.body);
 }

@@ -9,7 +9,7 @@ const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
-const PurgeCssPlugin = require('purgecss-webpack-plugin')
+const PurgeCssPlugin = require('purgecss-webpack-plugin');
 const baseConfig = require('./webpack.base');
 
 const cwd = process.cwd();
@@ -69,7 +69,7 @@ const config = merge(baseConfig, {
     // give dynamic chunk a name instead of id when `webpackChunkName` is not defined
     // if we use auto-increment id by default, and then we hardly to have a stable file signature
     new webpack.NamedChunksPlugin(
-      chunk => chunk.name || Array.from(chunk.modulesIterable, m => relative(m.context, m.request)).join('_'),
+      (chunk) => chunk.name || Array.from(chunk.modulesIterable, (m) => relative(m.context, m.request)).join('_')
     ),
     new HtmlWebpackPlugin({
       title: 'react 模版',
@@ -105,9 +105,7 @@ const config = merge(baseConfig, {
     }),
     new GenerateSW({
       swDest: 'sw.js',
-      exclude: [
-        /\.(gif|png|jpe?g|webp|svg)$/,
-      ],
+      exclude: [/\.(gif|png|jpe?g|webp|svg)$/],
       excludeChunks: ['manifest'],
       ignoreURLParametersMatching: [/./],
       importWorkboxFrom: 'local',
@@ -127,15 +125,11 @@ const config = merge(baseConfig, {
     // throw errors when build error
     function handleErrorBuild() {
       this.hooks.done.tap('done', (stats) => {
-        if (
-          stats.compilation.errors
-          && stats.compilation.errors.length
-          && process.argv.indexOf('--watch') === -1
-        ) {
+        if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') === -1) {
           console.log('build error'); //eslint-disable-line
           process.exit(1);
         }
-      })
+      });
     },
   ],
   optimization: {
@@ -178,12 +172,12 @@ const config = merge(baseConfig, {
       name: 'manifest',
     },
   },
-})
+});
 
 // analysis bundle size
 if (process.env.SHOW_REPORT) {
   const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-  config.plugins.push(new BundleAnalyzerPlugin())
+  config.plugins.push(new BundleAnalyzerPlugin());
 }
 
 module.exports = config;

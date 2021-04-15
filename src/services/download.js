@@ -1,8 +1,5 @@
 import fetcher from './fetcher';
-import {
-  downloadFromURL,
-  downloadFromStream,
-} from './helper';
+import { downloadFromURL, downloadFromStream } from './helper';
 
 /**
  * @returns {void}
@@ -17,7 +14,7 @@ export default async function download(ctx) {
   await fetcher(ctx);
 
   const { response, fileName } = ctx;
-  const type = ['Content-Type', 'content-type'].some(key => response.headers.get(key));
+  const type = ['Content-Type', 'content-type'].some((key) => response.headers.get(key));
 
   if (type.toLowerCase().includes('application/json')) {
     ctx.body = await response.json();

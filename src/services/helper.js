@@ -23,7 +23,7 @@ export function compose(middleware) {
     throw new TypeError('middleware must be a Array');
   }
 
-  return async function(context) {
+  return async function (context) {
     let index = 0;
 
     return (async function dispatch(i) {
@@ -40,16 +40,13 @@ export function compose(middleware) {
       } catch (error) {
         return Promise.reject(error);
       }
-    }(index));
-  }
+    })(index);
+  };
 }
 
 class OptionDefaulter {
   constructor(options = {}) {
-    this.options = Object.assign(
-      {},
-      options,
-    );
+    this.options = Object.assign({}, options);
   }
 
   get() {
@@ -78,7 +75,7 @@ export function setDefault(options) {
     .set('type', 'fetch')
     .set('headers', {})
     .set('ignoreError', false)
-    .set('validateStatus', () => validateStatus)
+    .set('validateStatus', () => validateStatus);
 
   return defaulter.get();
 }
@@ -95,7 +92,7 @@ export const log = (function logger() {
     { type: 'info', color: '#0dcaf0' },
     { type: 'success', color: '#198754' },
     { type: 'debug', color: '#6c757d' },
-    { type: 'warning', color: '#ffc107' },
+    { type: 'warn', color: '#ffc107' },
     { type: 'error', color: '#dc3545' },
   ];
 
@@ -103,18 +100,16 @@ export const log = (function logger() {
     const { type, color } = el;
     const silentLog = SILENT_LEVEL[type] || false;
 
-    result[type] = silentLog ? noop : function logFunc(...msg) {
-      /* eslint-disable no-console */
-      console.log(
-        `%c[${type.toUpperCase()}]: `,
-        `color:${color};font-weight:bold;`,
-        ...msg,
-      );
-    };
+    result[type] = silentLog
+      ? noop
+      : function logFunc(...msg) {
+          /* eslint-disable no-console */
+          console.log(`%c[${type.toUpperCase()}]: `, `color:${color};font-weight:bold;`, ...msg);
+        };
 
     return result;
   }, Object.create(null));
-}());
+})();
 
 export function downloadFromURL(url, fileName) {
   return new Promise((resolve, reject) => {
@@ -133,7 +128,7 @@ export function downloadFromURL(url, fileName) {
 }
 
 function getHeaderFileName(response) {
-  const disposition = ['Content-Disposition', 'content-disposition'].some(key => response.headers.get(key));
+  const disposition = ['Content-Disposition', 'content-disposition'].some((key) => response.headers.get(key));
   if (!disposition) return null;
 
   const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -151,7 +146,9 @@ export function downloadFromStream(blob, fileName, response) {
 
   if (!fileName && response) {
     const name = getHeaderFileName(response);
-    if (name) { filename = name; }
+    if (name) {
+      filename = name;
+    }
   }
 
   if (window.navigator.msSaveOrOpenBlob) {

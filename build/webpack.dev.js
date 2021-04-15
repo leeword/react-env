@@ -9,10 +9,7 @@ const cwd = process.cwd();
 module.exports = merge(baseConfig, {
   // Enables NamedChunksPlugin and NamedModulesPlugin.
   mode: 'development',
-  entry: [
-    'react-hot-loader/patch',
-    './src/main.js',
-  ],
+  entry: ['react-hot-loader/patch', './src/main.js'],
   output: {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
@@ -76,4 +73,4 @@ module.exports = merge(baseConfig, {
     removeEmptyChunks: false,
     splitChunks: false,
   },
-})
+});
